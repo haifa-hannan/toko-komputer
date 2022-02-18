@@ -11,6 +11,11 @@ const models = require("../models/index")
 //const req = require('express/lib/request')
 const product = models.product
 
+//import auth
+const auth = require("../routes/auth")
+app.use(auth) //harus login baru bisa akses endpoint
+
+
 const storage = multer.diskStorage({
     destination:(req, file, cb) => {
         cb(null, "./image/product")

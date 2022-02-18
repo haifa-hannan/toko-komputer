@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
   detail_transaksi.init({
     transaksi_id: { 
       type: DataTypes.INTEGER,
-      primaryKey: true
+      allowNull: false
     },  
     product_id: { 
       type: DataTypes.INTEGER,

@@ -16,6 +16,11 @@ const models = require("../models/index")
 const req = require('express/lib/request')
 const customer = models.customer
 
+//import auth
+const auth = require('../routes/auth')
+const jwt = require("jsonwebtoken")
+const SECRET_KEY = "OxzyVii"
+
 //config storage image
 const storage = multer.diskStorage({
     destination:(req,file,cb) => {
@@ -153,6 +158,32 @@ app.delete("/:id", async (req, res) => {
     } catch (error){
         res.json({
             message: error.message
+        })
+    }
+})
+
+//endpoint login customer, METHOD: POST, FUNCTION: findOne
+app.post("/auth", async(req, res) => {
+    let data = {
+        username: req.body.username,
+        password: md5(req.body.password)
+    }
+    let result = await customer.findOne({where: data})
+    if (result) {
+        //set payload from data
+        let payload = JSON.stringify(result)
+        //generate token based on payload and secret_key
+        let token = jwt.sign(payload, SECRET_KEY)
+        
+        res.json({
+            logged: true,
+            data: result,
+            token: token
+        })
+    } else {
+        res.json({
+            logged: false,
+            message: "Invalid username or password"
         })
     }
 })
